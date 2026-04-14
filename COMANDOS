@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spider-Man — El Hombre Araña</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #CC0000;
+    --darkred: #8B0000;
+    --blue: #0A1A6B;
+    --darkblue: #060D3A;
+    --white: #F5F0E8;
+    --gold: #E8C840;
+  }
+
+  body {
+    background: var(--darkblue);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.025) 60px),
+      repeating-linear-gradient(60deg, transparent, transparent 59px, rgba(255,255,255,0.025) 60px),
+      repeating-linear-gradient(120deg, transparent, transparent 59px, rgba(255,255,255,0.025) 60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 30%, #1a0a2e 0%, var(--darkblue) 70%);
+  }
+
+  .web-line {
+    position: absolute;
+    top: 0; left: 50%;
+    width: 2px; height: 200px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+  }
+
+  .hero-bg-spider {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(400px, 40vw);
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeUp 0.9s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-size: 0.9rem;
+    letter-spacing: 0.5em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 14vw, 10rem);
+    line-height: 0.92;
+    color: var(--white);
+    text-shadow: 4px 4px 0 var(--red), 0 0 80px rgba(204,0,0,0.35);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title span { color: var(--red); text-shadow: 4px 4px 0 var(--darkred), 0 0 60px rgba(204,0,0,0.8); }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(245,240,232,0.55);
+    letter-spacing: 0.15em;
+    margin-bottom: 2.5rem;
+  }
+
+  .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.2rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: white;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+  .btn-primary:hover { background: #ee1111; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(204,0,0,0.5); }
+
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    opacity: 0.35;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  .scroll-hint span { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; }
+  .scroll-hint .arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--white); animation: bounce 1.4s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+  @keyframes pulse { 0%,100%{opacity:0.35} 50%{opacity:0.7} }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--red);
+    padding: 1.1rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .stat { text-align: center; }
+  .stat-number { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; line-height: 1; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8; }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+
+  .section-label { font-size: 0.78rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--red); margin-bottom: 0.6rem; font-weight: 600; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1; margin-bottom: 1rem; }
+  .section-desc { color: rgba(245,240,232,0.5); font-size: 1rem; line-height: 1.75; max-width: 540px; margin-bottom: 3rem; }
+
+  /* ── POWERS ── */
+  .powers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5px;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .power-card {
+    background: var(--darkblue);
+    padding: 2rem 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+  .power-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 3px; height: 100%;
+    background: var(--red);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s;
+  }
+  .power-card:hover { background: rgba(10,26,107,0.6); }
+  .power-card:hover::before { transform: scaleY(1); }
+
+  .power-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .power-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.55rem; margin-bottom: 0.5rem; }
+  .power-desc { font-size: 0.88rem; line-height: 1.65; color: rgba(245,240,232,0.48); }
+
+  /* ── QUOTE ── */
+  .quote-section {
+    background: var(--red);
+    padding: 5rem 2rem;
+    text-align: center;
+    position: relative; z-index: 1;
+    overflow: hidden;
+  }
+  .quote-section::before {
+    content: '"';
+    position: absolute;
+    top: -0.25em; left: 50%; transform: translateX(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22rem; opacity: 0.07; line-height: 1;
+    pointer-events: none;
+  }
+  .quote-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.9rem, 5vw, 3.4rem);
+    line-height: 1.15;
+    max-width: 820px; margin: 0 auto 1.5rem;
+    position: relative; z-index: 1;
+  }
+  .quote-author { font-size: 0.82rem; letter-spacing: 0.35em; text-transform: uppercase; opacity: 0.72; font-weight: 600; }
+
+  /* ── ENEMIES ── */
+  .enemies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 1rem;
+  }
+  .enemy-card {
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: rgba(255,255,255,0.02);
+  }
+  .enemy-card:hover { border-color: var(--red); background: rgba(204,0,0,0.1); transform: translateY(-4px); }
+  .enemy-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+  .enemy-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.04em; display: block; margin-bottom: 0.3rem; }
+  .enemy-threat { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; }
+  .threat-high { color: #ff5555; }
+  .threat-mid  { color: var(--gold); }
+  .threat-low  { color: rgba(245,240,232,0.35); }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+  }
+  .tl-item { position: relative; margin-bottom: 2.5rem; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -2.45rem; top: 0.35rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 3px rgba(204,0,0,0.25);
+  }
+  .tl-year { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--red); margin-bottom: 0.25rem; }
+  .tl-event { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .tl-desc { font-size: 0.88rem; color: rgba(245,240,232,0.45); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #02060F;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.1em; color: var(--red); margin-bottom: 0.75rem; }
+  footer p { color: rgba(255,255,255,0.22); font-size: 0.82rem; letter-spacing: 0.08em; margin-top: 0.4rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .stats-bar { gap: 1.5rem; }
+    .hero-bg-spider { opacity: 0.03; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="web-line"></div>
+
+  <!-- Background spider logo (pure SVG, no external image) -->
+  <svg class="hero-bg-spider" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="100" cy="95" rx="18" ry="24" fill="white"/>
+    <ellipse cx="100" cy="140" rx="28" ry="38" fill="white"/>
+    <!-- Legs -->
+    <line x1="82" y1="100" x2="20" y2="70"  stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="80" y1="110" x2="15" y2="105" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="82" y1="120" x2="22" y2="148" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="118" y1="100" x2="180" y2="70"  stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="120" y1="110" x2="185" y2="105" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="118" y1="120" x2="178" y2="148" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <!-- Eyes -->
+    <ellipse cx="91"  cy="91" rx="7" ry="5" fill="#060D3A"/>
+    <ellipse cx="109" cy="91" rx="7" ry="5" fill="#060D3A"/>
+  </svg>
+
+  <div class="hero-content">
+    <p class="eyebrow">Marvel Comics Presenta</p>
+    <h1 class="hero-title">SPIDER-<br><span>MAN</span></h1>
+    <p class="hero-subtitle">Tu amigable vecino — Protector de Nueva York</p>
+    <div class="btn-group">
+      <a href="#poderes" class="btn btn-primary">Ver Poderes</a>
+      <a href="#historia" class="btn btn-outline">Su Historia</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-number">800+</div>
+    <div class="stat-label">Villanos Derrotados</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">60+</div>
+    <div class="stat-label">Años de Historia</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">10x</div>
+    <div class="stat-label">Fuerza Humana</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">#1</div>
+    <div class="stat-label">Héroe de NY</div>
+  </div>
+</div>
+
+<!-- PODERES -->
+<section class="section" id="poderes">
+  <p class="section-label">Habilidades</p>
+  <h2 class="section-title">Sus Superpoderes</h2>
+  <p class="section-desc">
+    Tras ser picado por una araña radiactiva, Peter Parker adquirió habilidades
+    extraordinarias que lo convierten en uno de los héroes más versátiles de Marvel.
+  </p>
+
+  <div class="powers-grid">
+    <div class="power-card">
+      <span class="power-icon">🕸️</span>
+      <div class="power-name">Lanzador de Telas</div>
+      <p class="power-desc">Dispara telarañas sintéticas con una resistencia superior al acero. Ideal para moverse por la ciudad y atrapar villanos.</p>
+    </div>
+    <div class="power-card">
+      <span class="power-icon">🦾</span>
+      <div class="power-name">Superfuerza</div>
+      <p class="power-desc">Puede levantar hasta 10 toneladas. Su fuerza le permite detener trenes en movimiento y combatir enemigos colosales.</p>
+    </div>
+    <div class="power-card">
+      <span class="power-icon">⚡</span>
+      <div class="power-name">Sentido Arácnido</div>
+      <p class="power-desc">Un sexto sentido que alerta de peligros inminentes antes de que ocurran, permitiendo reacciones sobrehumanas.</p>
+    </div>
+    <div class="power-card">
+      <span class="power-icon">🧗</span>
+      <div class="power-name">Adherencia</div>
+      <p class="power-desc">Puede adherirse a cualquier superficie, escalando edificios y moviéndose en paredes y techos con total agilidad.</p>
+    </div>
+    <div class="power-card">
+      <span class="power-icon">🧠</span>
+      <div class="power-name">Genio Inventor</div>
+      <p class="power-desc">Con un IQ excepcional, diseñó sus propios lanzatelarañas, traje y gadgets tecnológicos desde adolescente.</p>
+    </div>
+    <div class="power-card">
+      <span class="power-icon">🔄</span>
+      <div class="power-name">Regeneración</div>
+      <p class="power-desc">Su cuerpo sana heridas mucho más rápido que un humano normal, permitiéndole seguir luchando incluso lesionado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <p class="quote-text">Un gran poder conlleva una gran responsabilidad</p>
+  <p class="quote-author">— Ben Parker, Tío de Peter Parker</p>
+</div>
+
+<!-- HISTORIA / TIMELINE -->
+<section class="section" id="historia">
+  <p class="section-label">Cronología</p>
+  <h2 class="section-title">Historia del Héroe</h2>
+  <p class="section-desc">
+    Desde un estudiante tímido de Queens hasta el protector definitivo de Nueva York.
+  </p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-year">1962</div>
+      <div class="tl-event">Primera Aparición</div>
+      <p class="tl-desc">Spider-Man debuta en Amazing Fantasy #15, creado por Stan Lee y Steve Ditko. Peter Parker, estudiante de secundaria, es picado por una araña radiactiva.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">1963</div>
+      <div class="tl-event">Su Propia Serie</div>
+      <p class="tl-desc">Lanzamiento de The Amazing Spider-Man #1. Peter comienza a equilibrar su vida como fotógrafo del Daily Bugle y héroe enmascarado.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">1973</div>
+      <div class="tl-event">La Muerte de Gwen Stacy</div>
+      <p class="tl-desc">Uno de los momentos más impactantes en la historia de los cómics. El Duende Verde lanza a Gwen desde el Puente de Brooklyn.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2002</div>
+      <div class="tl-event">Debut en el Cine</div>
+      <p class="tl-desc">Sam Raimi dirige Spider-Man con Tobey Maguire. La película recauda más de 820 millones de dólares globalmente.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2021</div>
+      <div class="tl-event">No Way Home</div>
+      <p class="tl-desc">Spider-Man: No Way Home reúne tres generaciones del héroe en pantalla grande, convirtiéndose en un fenómeno cultural mundial.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ENEMIGOS -->
+<section class="section" id="enemigos" style="padding-top: 0;">
+  <p class="section-label">Galería de Villanos</p>
+  <h2 class="section-title">Sus Enemigos</h2>
+  <p class="section-desc">
+    Spider-Man enfrenta a algunos de los villanos más memorables del universo Marvel.
+  </p>
+
+  <div class="enemies-grid">
+    <div class="enemy-card">
+      <span class="enemy-emoji">🦅</span>
+      <span class="enemy-name">Duende Verde</span>
+      <span class="enemy-threat threat-high">Amenaza Alta</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🐙</span>
+      <span class="enemy-name">Doctor Octopus</span>
+      <span class="enemy-threat threat-high">Amenaza Alta</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🖤</span>
+      <span class="enemy-name">Venom</span>
+      <span class="enemy-threat threat-high">Amenaza Alta</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🦂</span>
+      <span class="enemy-name">Escorpión</span>
+      <span class="enemy-threat threat-mid">Amenaza Media</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🦏</span>
+      <span class="enemy-name">Rinoceronte</span>
+      <span class="enemy-threat threat-mid">Amenaza Media</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🐦</span>
+      <span class="enemy-name">Buitre</span>
+      <span class="enemy-threat threat-mid">Amenaza Media</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">🪄</span>
+      <span class="enemy-name">Mysterio</span>
+      <span class="enemy-threat threat-mid">Amenaza Media</span>
+    </div>
+    <div class="enemy-card">
+      <span class="enemy-emoji">⚡</span>
+      <span class="enemy-name">Electro</span>
+      <span class="enemy-threat threat-high">Amenaza Alta</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SPIDER-MAN</div>
+  <p>Personaje de Marvel Comics · Creado por Stan Lee y Steve Ditko · 1962</p>
+  <p style="margin-top:0.75rem;">Página creada con ❤️ — Solo fines educativos / fan art</p>
+</footer>
+
+</body>
+</html>
